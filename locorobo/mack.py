@@ -4,6 +4,7 @@ from locorobo import Data
 from locorobo import WaitType
 from locorobo import Song
 from locorobo import Note
+from numpy import arange #i need this for its float range and step compatibility
 
 def get_robot(robots, name):
     robot = None
@@ -40,7 +41,8 @@ def main():
     ### Mack-written program starts here ###
     robot.setup_wait(WaitType.TIME, 1000)
     setLight("blue")
-    robot.move(Motor.FORWARD,Motor.FORWARD,1,1,True)
+    accelerate()
+    #robot.move(Motor.FORWARD,Motor.FORWARD,1,1,True)
     ### End of Mack-written program ###
     robot.deactivate_motors()
     robot.disconnect()
@@ -56,6 +58,10 @@ def setLight(color):
     else:
         pass
     robot.sync_lights()
+
+def accelerate():
+    for i in arange(0.0,1.1,.1):
+        robot.move(Motor.FORWARD,Motor.FORWARD,i,i,True)
 
 # If we are on the main thread, run the program
 if __name__ == "__main__":
