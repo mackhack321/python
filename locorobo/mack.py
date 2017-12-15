@@ -26,7 +26,7 @@ def get_robot(robots, name):
 
 def main():
     # Tell LocoRobo what serial port to use
-    LocoRobo.setup("/dev/tty.usbmodem1")
+    LocoRobo.setup("COM3")
 
     # Scan for robots
 
@@ -39,10 +39,11 @@ def main():
     robot.activate_motors()
     robot.enable_sensor(Data.ULTRASONIC, False)
     ### Mack-written program starts here ###
+
     robot.setup_wait(WaitType.TIME, 1000)
     setLight("blue")
     accelerate()
-    #robot.move(Motor.FORWARD,Motor.FORWARD,1,1,True)
+
     ### End of Mack-written program ###
     robot.deactivate_motors()
     robot.disconnect()
@@ -61,7 +62,11 @@ def setLight(color):
 
 def accelerate():
     for i in arange(0.0,1.1,.1):
+    #var i will be 0.1,0.2,0.3, etc
+        robot.setup_wait(WaitType.TIME,1000)
+        #this sets each speed interval to go for 1 second
         robot.move(Motor.FORWARD,Motor.FORWARD,i,i,True)
+        #this gradually increases speed, in theory
 
 # If we are on the main thread, run the program
 if __name__ == "__main__":
