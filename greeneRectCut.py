@@ -8,4 +8,3 @@ def cutit(h,w):
     next = [w+1, -w-1, -1, 1]
     blen = (h+1) * (w+1) - 1
     grid = [False] * (blen + 1)
-cutit(3,4)
