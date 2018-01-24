@@ -1,12 +1,6 @@
-from bs4 import BeautifulSoup as soup
-from urllib.request import urlopen
+from soupGenerator import makesoup
+urlsoup = makesoup("https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48?Tid=7709")
 
-url = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48?Tid=7709"
-client = urlopen(url)
-html = client.read()
-client.close()
-
-urlsoup = soup(html, "html.parser")
 f = open("data.csv","w")
 f.write("Brand,Name,Shipping,Price\n")
 
