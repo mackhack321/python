@@ -1,4 +1,4 @@
-hourly = float(8.10)
+hourly = float(8.25)
 
 med = float(.0145)
 fed = float(.0196)
