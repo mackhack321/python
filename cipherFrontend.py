@@ -1,48 +1,39 @@
 import cipher
+choice = 0
 cipher.showLauncher()
-choice = input("Choose a function: ")
-if choice == "1":
-    badKey = True
-    while badKey is True:
-        try:
-            usrString = input("Text to encode: ")
-            usrKey = int(input("Key: "))
-            if usrKey == 0 or usrKey > 25:
-                print("Bad key")
-                continue
-            badKey = False
-            print("".join(cipher.encrypt(usrString, usrKey)))
-        except ValueError:
-            print("Bad key type")
-    cipher.showLauncher()
+while choice != "5":
+    choice = input("Choose a function: ")
+    
+    if choice == "1":
+        usrString = input("Text to encode: ").lower()
+        usrKey = cipher.getKey()
+        print("".join(cipher.encrypt(usrString, usrKey)))
+        input("Press enter to return to the launcher...")
+        cipher.showLauncher()
 
-elif choice == "2":
-    badKey = True
-    while badKey is True:
-        try:
-            usrString = input("Text to decode: ")
-            usrKey = int(input("Key: "))
-            if usrKey == 0 or usrKey > 25:
-                print("Bad key")
-                continue
-            print("".join(cipher.decrypt(usrString, usrKey)))
-            badKey = False
-        except ValueError:
-            print("Bad key type")
-    cipher.showLauncher()
+    elif choice == "2":
+        usrString = input("Text to decode: ").lower()
+        usrKey = cipher.getKey()
+        print("".join(cipher.decrypt(usrString, usrKey)))
+        input("Press enter to return to the launcher...")
+        cipher.showLauncher()
 
-elif choice == "3":
-    badKey = True
-    while badKey is True:
+    elif choice == "3":
         usrfile = input("Filename (exclude extension): ")
-        usrkey = int(input("Key: "))
-        if usrkey == 0 or usrkey > 25:
-            print("Bad key")
-            continue
-        badKey = False
-        try:
-            cipher.encryptFromFile(f"{usrfile}.txt", usrkey)
-        except FileExistsError as e:
-            print(f"File Not Found: {e}")
-            cipher.showLauncher()
-    cipher.showLauncher()
+        usrkey = cipher.getKey()
+        cipher.encryptFromFile(f"{usrfile}", usrkey)
+        input("Press enter to return to the launcher...")
+        cipher.showLauncher()
+
+    elif choice == "4":
+        usrfile = input("Filename (exclude extension): ")
+        usrkey = cipher.getKey()
+        cipher.decryptFromFile(f"{usrfile}", usrkey)
+        input("Press enter to return to the launcher...")
+        cipher.showLauncher()
+
+    elif choice == "5":
+        pass
+
+    else:
+        print("Invalid choice")

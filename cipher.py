@@ -10,6 +10,19 @@ def showLauncher():
     print("5 ------------------------- Exit")
     print("================================")
 
+def getKey():
+    badKey = True
+    while badKey is True:
+        try:
+            usrKey = int(input("Key: "))
+            if usrKey == 0 or usrKey > 25:
+                print("Bad key")
+                continue
+            return usrKey
+            badKey = False
+        except ValueError:
+            print("Bad key type")
+
 def encrypt(usr, key):
     ls = list(usr)
     newls = []
@@ -38,33 +51,26 @@ def decrypt(encrypted, key):
             newls.append(alpha[newIndex])
     return newls
 
-def getUsrArgs():
-    badKey = True
-    while badKey is True:
-        try:
-            usrString = input("Text to encode: ")
-            usrKey = int(input("Key: "))
-            if usrKey == 0 or usrKey > 25:
-                print("Bad key")
-                continue
-            print("".join(encrypt(usrString, usrKey)))
-            usrString = input("Text to decode: ")
-            usrKey = int(input("Key: "))
-            if usrKey == 0 or usrKey > 25:
-                print("Bad key")
-                continue
-            print("".join(decrypt(usrString, usrKey)))
-            badKey = False
-        except ValueError:
-            print("Bad key type")
-
 def encryptFromFile(filename, key):
-    read = open(f"{filename}.txt", "r")
-    contents = read.read().rstrip("\n")
-    read.close()
-    write = open(f"{filename}.txt","w")
-    encrypted = encrypt(contents, key)
-    write.write("ENCRYPTED:\n")
-    write.write("".join(encrypted))
-    write.write("\nDECRYPTED:\n")
-    write.write("".join(decrypt(encrypted, key)))
+    try:
+        read = open(f"{filename}.txt", "r")
+        contents = read.read().rstrip("\n").lower()
+        read.close()
+        write = open(f"{filename}.txt","w")
+        encrypted = encrypt(contents, key)
+        write.write("".join(encrypted))
+        print("Done!")
+    except FileNotFoundError:
+        print("ERROR: Specified file could not be found")
+
+def decryptFromFile(filename, key):
+    try:
+        read = open(f"{filename}.txt", "r")
+        contents = read.read().rstrip("\n").lower()
+        read.close()
+        write = open(f"{filename}.decrypted.txt","w")
+        decrypted = decrypt(contents, key)
+        write.write("".join(decrypted))
+        print("Done!")
+    except FileNotFoundError:
+        print("ERROR: Specified file could not be found")
