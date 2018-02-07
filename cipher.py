@@ -1,7 +1,9 @@
+# this program cannot be run independently
+# this is a library used by cipherFrontend
 import string
 alpha = list(string.ascii_lowercase)
 
-def showLauncher():
+def showLauncher(): # display function selection menu
     print("============Launcher============")
     print("1 ------------- Encrypt from CLI")
     print("2 ------------- Decrypt from CLI")
@@ -10,7 +12,7 @@ def showLauncher():
     print("5 ------------------------- Exit")
     print("================================")
 
-def getKey():
+def getKey(): # ask user for key, loops until key is valid
     badKey = True
     while badKey is True:
         try:
@@ -23,7 +25,7 @@ def getKey():
         except ValueError:
             print("Bad key type")
 
-def encrypt(usr, key):
+def encrypt(usr, key): # takes string and key, returns encrypted list
     ls = list(usr)
     newls = []
     for letter in ls:
@@ -39,7 +41,7 @@ def encrypt(usr, key):
                 newls.append(alpha[newIndex])
     return newls
 
-def decrypt(encrypted, key):
+def decrypt(encrypted, key): # takes string and key, returns decrypted list
     ls = list(encrypted)
     newls = []
     for letter in ls:
@@ -51,7 +53,7 @@ def decrypt(encrypted, key):
             newls.append(alpha[newIndex])
     return newls
 
-def encryptFromFile(filename, key):
+def encryptFromFile(filename, key): # takes filename and key, encrypts contents
     try:
         read = open(f"{filename}.txt", "r")
         contents = read.read().rstrip("\n").lower()
@@ -63,7 +65,7 @@ def encryptFromFile(filename, key):
     except FileNotFoundError:
         print("ERROR: Specified file could not be found")
 
-def decryptFromFile(filename, key):
+def decryptFromFile(filename, key): # takes filename and key, decrypts contents
     try:
         read = open(f"{filename}.txt", "r")
         contents = read.read().rstrip("\n").lower()
