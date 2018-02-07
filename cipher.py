@@ -61,7 +61,7 @@ def encryptFromFile(filename, key): # takes filename and key, encrypts contents
         write = open(f"{filename}.txt","w")
         encrypted = encrypt(contents, key)
         write.write("".join(encrypted))
-        print("Done!")
+        print(f"Done!  {filename}.txt has been encrypted")
     except FileNotFoundError:
         print("ERROR: Specified file could not be found")
 
@@ -73,6 +73,6 @@ def decryptFromFile(filename, key): # takes filename and key, decrypts contents
         write = open(f"{filename}.decrypted.txt","w")
         decrypted = decrypt(contents, key)
         write.write("".join(decrypted))
-        print("Done!")
+        print(f"Done!  Decrypted content has been dumped to {filename}.decrypted.txt")
     except FileNotFoundError:
         print("ERROR: Specified file could not be found")
