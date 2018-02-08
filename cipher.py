@@ -58,10 +58,16 @@ def encryptFromFile(filename, key): # takes filename and key, encrypts contents
         read = open(f"{filename}.txt", "r")
         contents = read.read().rstrip("\n").lower()
         read.close()
-        write = open(f"{filename}.txt","w")
+        ask = input("Would you like to\nA) overwrite the contents of this file\nor\nB) write to {filename}.encrypted.txt\na or b: ").lower()
+        if ask == "a":
+            write = open(f"{filename}.txt","w")
+        elif ask == "b":
+            write = open(f"{filename}.encrypted.txt","w")
+        else:
+            write = open("icantfollowdirectionsorimreallybadattyping.txt","w")
         encrypted = encrypt(contents, key)
         write.write("".join(encrypted))
-        print(f"Done!  {filename}.txt has been encrypted")
+        print("Done!")
     except FileNotFoundError:
         print("ERROR: Specified file could not be found")
 
@@ -70,9 +76,15 @@ def decryptFromFile(filename, key): # takes filename and key, decrypts contents
         read = open(f"{filename}.txt", "r")
         contents = read.read().rstrip("\n").lower()
         read.close()
-        write = open(f"{filename}.decrypted.txt","w")
+        ask = input(f"Would you like to\nA) overwrite the contents of this file\nor\nB) write to {filename}.decrypted.txt\na or b: ").lower()
+        if ask == "a":
+            write = open(f"{filename}.txt","w")
+        elif ask == "b":
+            write = open(f"{filename}.decrypted.txt","w")
+        else:
+            write = open("icantfollowdirectionsorimreallybadattyping.txt","w")
         decrypted = decrypt(contents, key)
         write.write("".join(decrypted))
-        print(f"Done!  Decrypted content has been dumped to {filename}.decrypted.txt")
+        print("Done!")
     except FileNotFoundError:
         print("ERROR: Specified file could not be found")
