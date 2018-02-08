@@ -88,3 +88,24 @@ def decryptFromFile(filename, key): # takes filename and key, decrypts contents
         print("Done!")
     except FileNotFoundError:
         print("ERROR: Specified file could not be found")
+
+def bruteforce(encrypted):
+    try:
+        dictionary = open("dict.txt","r")
+        dictionaryls = []
+        for word in dictionary:
+            dictionaryls.append(word.rstrip())
+        done = False
+        while done is False:
+            for key in range(0,26):
+                decrypted = decrypt(encrypted, key)
+                decryptedstr = "".join(decrypted)
+                decryptedwords = decryptedstr.split()
+                for word in decryptedwords:
+                    #print(word)
+                    if word in dictionaryls:
+                        print("".join(decrypted))
+                        print(f"Key: {key}")
+                        done = True
+    except FileNotFoundError:
+        print("The dictionary file could not be found and is necessary for this function to work")
