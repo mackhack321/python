@@ -9,7 +9,8 @@ def showLauncher(): # display function selection menu
     print("2 ------------- Decrypt from CLI")
     print("3 ------- Encrypt from text file")
     print("4 ------- Decrypt from text file")
-    print("5 ------------------------- Exit")
+    print("5 ------- Brute Force Decryption")
+    print("6 ------------------------- Exit")
     print("================================")
 
 def getKey(): # ask user for key, loops until key is valid
@@ -89,7 +90,14 @@ def decryptFromFile(filename, key): # takes filename and key, decrypts contents
     except FileNotFoundError:
         print("ERROR: Specified file could not be found")
 
-def bruteforce(encrypted):
+def removePunctuation(ls): # takes in a list and returns the same list without punctuation
+    for i in ls:
+        if i in string.punctuation:
+            ls.remove(i)
+    return ls
+
+def bruteforce(encrypted): # takes in an encrypted string and finds possible keys and decryptions
+    knownkeys = []
     try:
         dictionary = open("dict.txt","r")
         dictionaryls = []
@@ -97,15 +105,18 @@ def bruteforce(encrypted):
             dictionaryls.append(word.rstrip())
         done = False
         while done is False:
+            print("POSSIBLE DECRYPTIONS AND KEYS: ")
             for key in range(0,26):
                 decrypted = decrypt(encrypted, key)
-                decryptedstr = "".join(decrypted)
-                decryptedwords = decryptedstr.split()
+                decryptedwords = "".join(removePunctuation(decrypted)).split()
                 for word in decryptedwords:
-                    #print(word)
-                    if word in dictionaryls:
+                    if word in dictionaryls and key not in knownkeys and len(word) > 3:
                         print("".join(decrypted))
                         print(f"Key: {key}")
+                        knownkeys.append(key)
                         done = True
+            if len(knownkeys) == 0:
+                print("Could not decrypt, input is likely gibberish")
+                done = True
     except FileNotFoundError:
-        print("The dictionary file could not be found and is necessary for this function to work")
+        print("ERROR: The dictionary file could not be found and is necessary for this function to work")

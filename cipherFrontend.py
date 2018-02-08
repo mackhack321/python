@@ -1,7 +1,7 @@
 import cipher
 choice = 0
 cipher.showLauncher()
-while choice != "5":
+while choice != "6":
     choice = input("Choose a function: ")
 
     if choice == "1":
@@ -33,11 +33,12 @@ while choice != "5":
         cipher.showLauncher()
 
     elif choice == "5":
-        pass
+        usrString = input("Text to decode with brute force: ").lower()
+        cipher.bruteforce(usrString)
+        cipher.showLauncher()
 
     elif choice == "6":
-        usrString = input("Text to decode with brute force: ")
-        cipher.bruteforce(usrString)
+        pass
 
     else:
         print("Invalid choice")
