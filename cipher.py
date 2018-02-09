@@ -10,7 +10,8 @@ def showLauncher(): # display function selection menu
     print("3 ------- Encrypt from text file")
     print("4 ------- Decrypt from text file")
     print("5 ------- Brute Force Decryption")
-    print("6 ------------------------- Exit")
+    print("6 --- Brute Force from text file")
+    print("7 ------------------------- Exit")
     print("================================")
 
 def getKey(): # ask user for key, loops until key is valid
