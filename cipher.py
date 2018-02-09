@@ -115,8 +115,23 @@ def bruteforce(encrypted): # takes in an encrypted string and finds possible key
                         knownkeys.append(key)
                         done = True
             if len(knownkeys) == 0:
-                print("Could not decrypt, input is likely gibberish")
+                print("Could not decrypt, input is likely gibberish or composed solely of proper nouns")
                 done = True
+    except FileNotFoundError:
+        print("ERROR: The dictionary file could not be found and is necessary for this function to work")
+
+def bruteforceFromFile(filename):
+    try:
+        txtfile = open(f"{filename}.txt")
+        contents = txtfile.read().rstrip("\n").lower()
+        txtfile.close()
+        print("WARNING!  Using brute force on a text file with an excessive amount of content,")
+        print("specifically the entire Bee Movie script, will likely take a very long time.")
+        warning = "bob"
+        while warning != "y" and warning != "n":
+            warning = input("Do you still wish to continue? y or n: ")
+            if warning == "y":
+                bruteforce(contents)
     except FileNotFoundError:
         print("ERROR: The dictionary file could not be found and is necessary for this function to work")
 

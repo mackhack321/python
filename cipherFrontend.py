@@ -40,5 +40,11 @@ while choice != "6":
     elif choice == "6":
         pass
 
+    elif choice == "7":
+        usrfile = input("Filename (exclude extension): ")
+        cipher.bruteforceFromFile(f"{usrfile}")
+        input("Press enter to return to the launcher...")
+        cipher.showLauncher()
+
     else:
         print("Invalid choice")
