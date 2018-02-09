@@ -120,3 +120,7 @@ def bruteforce(encrypted): # takes in an encrypted string and finds possible key
                 done = True
     except FileNotFoundError:
         print("ERROR: The dictionary file could not be found and is necessary for this function to work")
+
+if __name__ == "__main__": # this happens when someone tries to run cipher.py on its own
+    print("This program cannot be executed independenly as it is a library on which")
+    print("cipherFrontend relies.  Please run cipherFrontend.py")
