@@ -107,11 +107,10 @@ def bruteforce(encrypted): # takes in an encrypted string and finds possible key
         while done is False:
             print("POSSIBLE DECRYPTIONS AND KEYS: ")
             for key in range(0,26):
-                decrypted = decrypt(encrypted, key)
-                decryptedwords = "".join(removePunctuation(decrypted)).split()
+                decryptedwords = "".join(removePunctuation(decrypt(encrypted, key))).split()
                 for word in decryptedwords:
                     if word in dictionaryls and key not in knownkeys and len(word) > 3:
-                        print("".join(decrypted))
+                        print("".join(decrypt(encrypted, key)))
                         print(f"Key: {key}")
                         knownkeys.append(key)
                         done = True
