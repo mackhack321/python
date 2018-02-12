@@ -11,7 +11,8 @@ def showLauncher(): # display function selection menu
     print("4 ------- Decrypt from text file")
     print("5 ------- Brute Force Decryption")
     print("6 --- Brute Force from text file")
-    print("7 ------------------------- Exit")
+    print("7 --------------- Reverse Cipher")
+    print("8 ------------------------- Exit")
     print("================================")
 
 def getKey(): # ask user for key, loops until key is valid
@@ -135,6 +136,9 @@ def bruteforceFromFile(filename):
                 bruteforce(contents)
     except FileNotFoundError:
         print("ERROR: The dictionary file could not be found and is necessary for this function to work")
+
+def reverseCipher(usr):
+    return list(usr)[::-1]
 
 if __name__ == "__main__": # this happens when someone tries to run cipher.py on its own
     print("This program cannot be executed independenly as it is a library on which")

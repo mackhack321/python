@@ -1,7 +1,7 @@
 import cipher
 choice = 0
 cipher.showLauncher()
-while choice != "7":
+while choice != "8":
     choice = input("Choose a function: ")
 
     if choice == "1":
@@ -44,6 +44,12 @@ while choice != "7":
         cipher.showLauncher()
 
     elif choice == "7":
+        usrString = input("Text to encode: ")
+        print("".join(cipher.reverseCipher(usrString)))
+        input("Press enter to return to the launcher...")
+        cipher.showLauncher()
+
+    elif choice == "8":
         pass
 
     else:
