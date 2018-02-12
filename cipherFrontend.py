@@ -1,7 +1,7 @@
 import cipher
 choice = 0
 cipher.showLauncher()
-while choice != "8":
+while choice != "9":
     choice = input("Choose a function: ")
 
     if choice == "1":
@@ -50,6 +50,12 @@ while choice != "8":
         cipher.showLauncher()
 
     elif choice == "8":
+        usrfile = input("Filename (exclude extension): ")
+        cipher.reverseCipherFromFile(f"{usrfile}")
+        input("Press enter to return to the launcher...")
+        cipher.showLauncher()
+
+    elif choice == "9":
         pass
 
     else:
