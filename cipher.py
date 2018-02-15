@@ -21,9 +21,6 @@ def getKey(): # ask user for key, loops until key is valid
     while badKey is True:
         try:
             usrKey = int(input("Key: "))
-            if usrKey == 0 or usrKey > 25:
-                print("Bad key")
-                continue
             return usrKey
             badKey = False
         except ValueError:
