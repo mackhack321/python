@@ -5,14 +5,14 @@ while choice != "9":
     choice = input("Choose a function: ")
 
     if choice == "1":
-        usrString = input("Text to encode: ").lower()
+        usrString = input("Text to encode: ")
         usrKey = cipher.getKey()
         print("".join(cipher.encrypt(usrString, usrKey)))
         input("Press enter to return to the launcher...")
         cipher.showLauncher()
 
     elif choice == "2":
-        usrString = input("Text to decode: ").lower()
+        usrString = input("Text to decode: ")
         usrKey = cipher.getKey()
         print("".join(cipher.decrypt(usrString, usrKey)))
         input("Press enter to return to the launcher...")
@@ -33,7 +33,7 @@ while choice != "9":
         cipher.showLauncher()
 
     elif choice == "5":
-        usrString = input("Text to decode with brute force: ").lower()
+        usrString = input("Text to decode with brute force: ")
         cipher.bruteforce(usrString)
         cipher.showLauncher()
 

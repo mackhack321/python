@@ -36,13 +36,10 @@ def encrypt(usr, key): # takes string and key, returns encrypted list
         if not letter.isalpha():
             newls.append(letter)
         else:
-            try:
-                index = alpha.index(letter)
-                newIndex = index + key
-                newls.append(alpha[newIndex])
-            except IndexError:
-                newIndex = newIndex - 26
-                newls.append(alpha[newIndex])
+            if letter.isupper():
+                newls.append(alpha[(alpha.index(letter.lower())+key)%26].upper())
+            else:
+                newls.append(alpha[(alpha.index(letter)+key)%26])
     return newls
 
 def decrypt(encrypted, key): # takes string and key, returns decrypted list
@@ -52,9 +49,10 @@ def decrypt(encrypted, key): # takes string and key, returns decrypted list
         if not letter.isalpha():
             newls.append(letter)
         else:
-            index = alpha.index(letter)
-            newIndex = index - key
-            newls.append(alpha[newIndex])
+            if letter.isupper():
+                newls.append(alpha[(alpha.index(letter.lower())-key)%26].upper())
+            else:
+                newls.append(alpha[(alpha.index(letter)-key)%26])
     return newls
 
 def encryptFromFile(filename, key): # takes filename and key, encrypts contents
@@ -112,7 +110,7 @@ def bruteforce(encrypted): # takes in an encrypted string and finds possible key
             for key in range(0,26):
                 decryptedwords = "".join(removePunctuation(decrypt(encrypted, key))).split()
                 for word in decryptedwords:
-                    if word in dictionaryls and key not in knownkeys and len(word) > 3:
+                    if word.lower() in dictionaryls and key not in knownkeys and len(word) > 3:
                         print("".join(decrypt(encrypted, key)))
                         print(f"Key: {key}")
                         knownkeys.append(key)
