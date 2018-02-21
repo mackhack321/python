@@ -1,56 +1,63 @@
-# "the quick brown fox" with key of 5: tub hirfecoo kwxq n|
-# "pure imagination" with key of 5: pinnuma|rat|egi| io|
-# "Mack has found out something neat: Transposition encryption!" with key of 4:
-# M  nuoh trpt riahfdtmin:aoieyocao  ene nsonpnksuostgaTsinct!
-# "mack is the best" with key of 6: msba ectskht e|i |
-
-# run the program with --showArray to see the encryption grid
+# run the program with argument --showArray to see the encryption grid
 from math import ceil # this is needed to round up
 from sys import argv # this lets us see the command line args
-import pyperclip as pclip
+try:
+    import pyperclip as pclip
+    hasPyperclip = True # this lets the program know whether or not pyperclip is present
+except ImportError: # print a friendly advisory message but dont break the program
+    print("The pyperclip library is not installed on this machine.  Some functionality will not be available.")
+    hasPyperclip = False
+
+def askToCopy(hasPyperclip, result): # this only does anything if pyperclip is present
+    if hasPyperclip is True:
+        copy = input("Copy result to clipboard? y/n: ")
+        if copy == "y":
+            try:
+                pclip.copy(result)
+                print("Copied!")
+            except NotImplemented:
+                print("ERROR: Copy is not implemented on your machine")
 
 def showArrayIfArg(ls): # this takes in a raw list and, if the arg is present, displays each item in the list
      try:
          if "--showArray" in argv:
-             for i in bigls:
+             for i in ls:
                  print(i)
      except: pass
 
 def encrypt(usr, key):
-    usrls = list(usr)
-    rows = ceil(len(usr)/key)
-    numOfChars = len(usrls)
-    counter = 0
+    usrls = list(usr) # turn input into a list
+    rows = ceil(len(usr)/key) # find amount of rows that will be needed
+    numOfChars = len(usrls) # get the length of the input
+    counter = 0 # init counter
+    bigls = [] # will contain lists that contain the string but cut up into 'rows' lists
+    encryptedls = [] # will contain result
 
-    bigls = []
-    rowls = []
-    encryptedls = []
-
-    while counter != rows:
-        newls = usrls[0+(key*counter):key+(key*counter)]
-        while len(newls) != key:
-            newls.append("|")
-        bigls.append(newls)
-        counter += 1
+    while counter != rows: # each iteration of this loop creates a list that contains one row of the string
+        newls = usrls[0+(key*counter):key+(key*counter)] # takes the input list and cuts it into a row with 'key' number of chars
+        while len(newls) != key: # until there are no empty spots
+            newls.append("|") # add a pipe to denote the empty spot
+        bigls.append(newls) # add the freshly cut list to the big list
+        counter += 1 # move on to the next row
 
     for num in range(key):
-        encryptedls.append("".join(i[num] for i in bigls))
+        encryptedls.append("".join(i[num] for i in bigls)) # add each list from the big list to the result list
 
-    showArrayIfArg(bigls) # debug
+    showArrayIfArg(bigls) # debug, shows the transposition grid
     return encryptedls # this function returns a raw list!!! it is up to the frontend to make it pretty
 
 def decrypt(encrypted, key):
-    encryptedls = list(encrypted)
-    rows = ceil(len(usr)/key)
-    decryptedls = []
-    for i in range(0,rows):
-        for ls in encryptedls[i::rows]: # need to find the right splice
-            decryptedls.append(ls)
-            showArrayIfArg(ls) # debug
-        decryptedls = [i for i in decryptedls if i != "|"]
+    encryptedls = list(encrypted) # turn input into a list
+    rows = ceil(len(usr)/key) # find amount of rows that will be needed
+    decryptedls = [] # will contain result
+    for i in range(0,rows): # for all of the rows
+        for char in encryptedls[i::rows]: # with every 'row'th char as ls
+            decryptedls.append(char) # add the char to the result list
+            showArrayIfArg(char) # debug, will show each char
+        decryptedls = [i for i in decryptedls if i != "|"] # removes pipes from result list
     return decryptedls # this function returns a raw list!!! it is up to the frontend to make it pretty
 
-def getKey():
+def getKey(): # this gets and returns a key
     goodkey = False
     while goodkey is not True:
         key = int(input("Key: "))
@@ -66,25 +73,10 @@ def getKey():
         return key
 
 choice = input("Encrypt or decrypt? e/d: ")
-if choice == "e":
-    usr = input("Message to encrypt: ")
-    key = getKey()
-    print("".join(encrypt(usr,key)))
-    copy = input("Copy to clipboard? y/n: ")
-    if copy == "y":
-        try:
-            pclip.copy("".join(encrypt(usr,key)))
-            print("Copied!")
-        except NotImplemented:
-            print("ERROR: Copy is not implemented on your machine")
-if choice == "d":
-    usr = input("Message to decrypt: ")
-    key = getKey()
-    print("".join(decrypt(usr, key)))
-    copy = input("Copy to clipboard? y/n: ")
-    if copy == "y":
-        try:
-            pclip.copy("".join(decrypt(usr,key)))
-            print("Copied!")
-        except pclip.PyperclipException:
-            print("ERROR: Copy is not implemented on your machine")
+if choice == "e": mode = encrypt
+elif choice == "d": mode = decrypt
+usr = input("Message: ")
+key = getKey()
+result = "".join(mode(usr, key))
+print(result)
+askToCopy(hasPyperclip, result)
