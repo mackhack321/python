@@ -7,8 +7,9 @@
 # run the program with --showArray to see the encryption grid
 from math import ceil # this is needed to round up
 from sys import argv # this lets us see the command line args
+import pyperclip as pclip
 
-def showArrayIfArg(bigls): # this takes in a raw list and, if the arg is present, displays each item in the list
+def showArrayIfArg(ls): # this takes in a raw list and, if the arg is present, displays each item in the list
      try:
          if "--showArray" in argv:
              for i in bigls:
@@ -49,12 +50,41 @@ def decrypt(encrypted, key):
         decryptedls = [i for i in decryptedls if i != "|"]
     return decryptedls # this function returns a raw list!!! it is up to the frontend to make it pretty
 
+def getKey():
+    goodkey = False
+    while goodkey is not True:
+        key = int(input("Key: "))
+        if key > len(usr):
+            print("WARNING: Using a key that is larger than the lenght of your message will not encrypt anything.")
+            confirm = input("Do you wish to continue? y or n: ")
+            if confirm == "y":
+                goodkey = True
+                return key
+            else:
+                continue
+        goodkey = True
+        return key
+
 choice = input("Encrypt or decrypt? e/d: ")
 if choice == "e":
     usr = input("Message to encrypt: ")
-    key = int(input("Key: "))
+    key = getKey()
     print("".join(encrypt(usr,key)))
+    copy = input("Copy to clipboard? y/n: ")
+    if copy == "y":
+        try:
+            pclip.copy("".join(encrypt(usr,key)))
+            print("Copied!")
+        except NotImplemented:
+            print("ERROR: Copy is not implemented on your machine")
 if choice == "d":
     usr = input("Message to decrypt: ")
-    key = int(input("Key: "))
+    key = getKey()
     print("".join(decrypt(usr, key)))
+    copy = input("Copy to clipboard? y/n: ")
+    if copy == "y":
+        try:
+            pclip.copy("".join(decrypt(usr,key)))
+            print("Copied!")
+        except pclip.PyperclipException:
+            print("ERROR: Copy is not implemented on your machine")
