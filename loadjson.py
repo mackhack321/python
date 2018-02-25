@@ -5,10 +5,7 @@ def jsonToDict(filename):
     return data
 
 import json
-data = jsonToDict(filename = "mack.json")
-data = data["people"]
+data = jsonToDict(filename = "razer.json")
+print(data["created_at"])
+print(data["text"])
 
-for entry in data:
-    name = entry["name"]
-    age = entry["age"]
-    print(f"{name} is {age} years old")
