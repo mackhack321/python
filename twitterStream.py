@@ -1,5 +1,14 @@
 import tweepy
 import json
+from loadjson import displayFromJSONObject
+
+def writeToJSON(listOfJSONs, filename):
+    jsonfile = open(filename,"a")
+    print(f"Writing objects to {filename}...")
+    for obj in listOfJSONs:
+        json.dump(obj, jsonfile, indent = 4, sort_keys = True)
+        jsonfile.write("\n\n")
+    print(f"Done!  Wrote {len(listOfJSONs)} objects to {filename}")
 
 consumer_key = "zof0VBLnjHn4Y5bWtd6u1r607"
 consumer_secret = "qF1A1QxBjTBKEsQbk1RPoW5taRKaX5rirvHAz79L5ma2pwIwJr"
@@ -12,10 +21,12 @@ api = tweepy.API(auth)
 
 class MyStreamListener(tweepy.StreamListener):
     def on_data(self, data):
-        #data = data.split('"text":')[1].split(',"source"')[0]
-        while len(tweets) < 5:
+        while len(tweets) < 50:
             tweets.append(json.loads(data))
-            print(json.loads(data))
+            try:
+                displayFromJSONObject(json.loads(data))
+            except:
+                tweets.remove(json.loads(data))
             return True
         return False
     def on_status(self, status):
@@ -28,8 +39,7 @@ class MyStreamListener(tweepy.StreamListener):
 tweets = []
 jsonfile = open("streamdata.json","a")
 myStream = tweepy.Stream(auth = api.auth, listener = MyStreamListener())
-myStream.filter(track = ["fortnite"])
-
-for tweet in tweets:
-    json.dump(tweet,jsonfile, indent = 4, sort_keys = True)
-    jsonfile.write("\n\n")
+myStream.filter(track = ["florida", "olympics", "trump"])
+writeToFile = True # change to True to write to streamdata.json
+if writeToFile is True:
+    writeToJSON(tweets, "streamdata.json")
