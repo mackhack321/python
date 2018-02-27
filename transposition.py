@@ -25,7 +25,7 @@ def showArrayIfArg(ls): # this takes in a raw list and, if the arg is present, d
                  print(i)
      except: pass
 
-def encrypt(usr, key):
+def encrypt(usr, key, filler):
     usrls = list(usr) # turn input into a list
     rows = ceil(len(usr)/key) # find amount of rows that will be needed
     numOfChars = len(usrls) # get the length of the input
@@ -36,7 +36,7 @@ def encrypt(usr, key):
     while counter != rows: # each iteration of this loop creates a list that contains one row of the string
         newls = usrls[0+(key*counter):key+(key*counter)] # takes the input list and cuts it into a row with 'key' number of chars
         while len(newls) != key: # until there are no empty spots
-            newls.append("|") # add a pipe to denote the empty spot
+            newls.append(filler) # add a pipe to denote the empty spot
         bigls.append(newls) # add the freshly cut list to the big list
         counter += 1 # move on to the next row
 
@@ -46,7 +46,7 @@ def encrypt(usr, key):
     showArrayIfArg(bigls) # debug, shows the transposition grid
     return encryptedls # this function returns a raw list!!! it is up to the frontend to make it pretty
 
-def decrypt(encrypted, key):
+def decrypt(encrypted, key, filler):
     encryptedls = list(encrypted) # turn input into a list
     rows = ceil(len(usr)/key) # find amount of rows that will be needed
     decryptedls = [] # will contain result
@@ -54,7 +54,7 @@ def decrypt(encrypted, key):
         for char in encryptedls[i::rows]: # with every 'row'th char as ls
             decryptedls.append(char) # add the char to the result list
             showArrayIfArg(char) # debug, will show each char
-        decryptedls = [i for i in decryptedls if i != "|"] # removes pipes from result list
+        decryptedls = [i for i in decryptedls if i != filler] # removes pipes from result list
     return decryptedls # this function returns a raw list!!! it is up to the frontend to make it pretty
 
 def getKey(): # this gets and returns a key
@@ -77,6 +77,6 @@ if choice == "e": mode = encrypt
 elif choice == "d": mode = decrypt
 usr = input("Message: ")
 key = getKey()
-result = "".join(mode(usr, key))
+result = "".join(mode(usr, key, filler = "|"))
 print(result)
 askToCopy(hasPyperclip, result)
