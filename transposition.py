@@ -48,7 +48,7 @@ def encrypt(usr, key, filler):
 
 def decrypt(encrypted, key, filler):
     encryptedls = list(encrypted) # turn input into a list
-    rows = ceil(len(usr)/key) # find amount of rows that will be needed
+    rows = ceil(len(encrypted)/key) # find amount of rows that will be needed
     decryptedls = [] # will contain result
     for i in range(0,rows): # for all of the rows
         for char in encryptedls[i::rows]: # with every 'row'th char as ls
@@ -76,15 +76,16 @@ def brute(encrypted, filler):
     for iteration in range(1, len(encrypted) + 1):
         print("".join(decrypt(encrypted, iteration, filler)))
 
-choice = input("Encrypt or decrypt? e/d: ")
-if choice == "e": mode = encrypt
-elif choice == "d": mode = decrypt
-elif choice == "b": mode = brute
-usr = input("Message: ")
-if mode != brute:
-    key = getKey()
-    result = "".join(mode(usr, key, filler = "|"))
-    print(result)
-    askToCopy(hasPyperclip, result)
-else:
-    brute(usr, "|")
+if __name__ == "__main__":
+    choice = input("Encrypt or decrypt? e/d: ")
+    if choice == "e": mode = encrypt
+    elif choice == "d": mode = decrypt
+    elif choice == "b": mode = brute
+    usr = input("Message: ")
+    if mode != brute:
+        key = getKey()
+        result = "".join(mode(usr, key, filler = "|"))
+        print(result)
+        askToCopy(hasPyperclip, result)
+    else:
+        brute(usr, "|")
