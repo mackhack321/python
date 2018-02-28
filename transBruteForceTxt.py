@@ -1,3 +1,4 @@
+# open a txt file and transposition bruteforce each line
 import transposition as tr
 txtfile = open("problematicString.txt")
 lines = txtfile.readlines()

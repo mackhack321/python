@@ -2,7 +2,7 @@
 # this is a library used by cipherFrontend
 import string
 alpha = list(string.ascii_lowercase)
-greenelist = list('!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~')
+greenelist = list(' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~')
 
 def showLauncher(): # display function selection menu
     print("============Launcher============")
