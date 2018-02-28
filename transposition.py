@@ -72,11 +72,19 @@ def getKey(): # this gets and returns a key
         goodkey = True
         return key
 
+def brute(encrypted, filler):
+    for iteration in range(1, len(encrypted) + 1):
+        print("".join(decrypt(encrypted, iteration, filler)))
+
 choice = input("Encrypt or decrypt? e/d: ")
 if choice == "e": mode = encrypt
 elif choice == "d": mode = decrypt
+elif choice == "b": mode = brute
 usr = input("Message: ")
-key = getKey()
-result = "".join(mode(usr, key, filler = "|"))
-print(result)
-askToCopy(hasPyperclip, result)
+if mode != brute:
+    key = getKey()
+    result = "".join(mode(usr, key, filler = "|"))
+    print(result)
+    askToCopy(hasPyperclip, result)
+else:
+    brute(usr, "|")

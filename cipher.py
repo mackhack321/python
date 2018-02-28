@@ -2,6 +2,7 @@
 # this is a library used by cipherFrontend
 import string
 alpha = list(string.ascii_lowercase)
+greenelist = list(' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~')
 
 def showLauncher(): # display function selection menu
     print("============Launcher============")
@@ -30,26 +31,28 @@ def encrypt(usr, key): # takes string and key, returns encrypted list
     ls = list(usr)
     newls = []
     for letter in ls:
-        if not letter.isalpha():
-            newls.append(letter)
+        # if not letter.isalpha():
+        #     newls.append(letter)
+        # else:
+        if letter.isupper():
+            newls.append(greenelist[(greenelist.index(letter.lower())+key)%95].upper())
         else:
-            if letter.isupper():
-                newls.append(alpha[(alpha.index(letter.lower())+key)%26].upper())
-            else:
-                newls.append(alpha[(alpha.index(letter)+key)%26])
+            newls.append(greenelist[(greenelist.index(letter)+key)%95])
     return newls
 
 def decrypt(encrypted, key): # takes string and key, returns decrypted list
     ls = list(encrypted)
     newls = []
     for letter in ls:
-        if not letter.isalpha():
-            newls.append(letter)
-        else:
+        # if not letter.isalpha():
+        #     newls.append(letter)
+        # else:
+        if letter in greenelist:
             if letter.isupper():
-                newls.append(alpha[(alpha.index(letter.lower())-key)%26].upper())
+                newls.append(greenelist[(greenelist.index(letter.lower())-key)%95].upper())
             else:
-                newls.append(alpha[(alpha.index(letter)-key)%26])
+                newls.append(greenelist[(greenelist.index(letter)-key)%95])
+        else: newls.append(letter)
     return newls
 
 def encryptFromFile(filename, key): # takes filename and key, encrypts contents
@@ -94,29 +97,39 @@ def removePunctuation(ls): # takes in a list and returns the same list without p
             ls.remove(i)
     return ls
 
-def bruteforce(encrypted): # takes in an encrypted string and finds possible keys and decryptions
+def bruteforce(encrypted, usrRunthrus): # takes in an encrypted string and finds possible keys and decryptions
+    runthrus = usrRunthrus
     knownkeys = []
-    try:
-        dictionary = open("dict.txt","r")
-        dictionaryls = []
-        for word in dictionary:
-            dictionaryls.append(word.rstrip())
-        done = False
-        while done is False:
-            print("POSSIBLE DECRYPTIONS AND KEYS: ")
-            for key in range(0,26):
-                decryptedwords = "".join(removePunctuation(decrypt(encrypted, key))).split()
-                for word in decryptedwords:
-                    if word.lower() in dictionaryls and key not in knownkeys and len(word) > 3:
-                        print("".join(decrypt(encrypted, key)))
-                        print(f"Key: {key}")
-                        knownkeys.append(key)
-                        done = True
-            if len(knownkeys) == 0:
-                print("Could not decrypt, input is likely gibberish or composed solely of proper nouns")
-                done = True
-    except FileNotFoundError:
-        print("ERROR: The dictionary file could not be found and is necessary for this function to work")
+    results = []
+    while runthrus != 0:
+        try:
+            dictionary = open("dict.txt","r")
+            dictionaryls = []
+            for word in dictionary:
+                dictionaryls.append(word.rstrip())
+            done = False
+            while done is False:
+                print("POSSIBLE DECRYPTIONS AND KEYS: ")
+                for key in range(0,26):
+                    decryptedwords = "".join(removePunctuation(decrypt(encrypted, key))).split()
+                    print("".join(decrypt(encrypted, key)))
+                    print(f"Key: {key}")
+                    knownkeys.append(key)
+                    results.append("".join(decrypt(encrypted, key)))
+                    done = True
+                if len(knownkeys) == 0:
+                    print("Could not decrypt, input is likely gibberish or composed solely of proper nouns")
+                    done = True
+        except FileNotFoundError:
+            print("ERROR: The dictionary file could not be found and is necessary for this function to work")
+            break
+        if runthrus > 1:
+            input(f"Entering runthru #{runthrus}")
+            for result in results:
+                input(f"BRUTEFORCING: {result}")
+                bruteforce(result, 1)
+            runthrus -= 1
+        else: break
 
 def bruteforceFromFile(filename):
     try:

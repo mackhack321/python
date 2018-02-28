@@ -34,7 +34,8 @@ while choice != "9":
 
     elif choice == "5":
         usrString = input("Text to decode with brute force: ")
-        cipher.bruteforce(usrString)
+        usrRunthrus = int(input("How many times? "))
+        cipher.bruteforce(usrString, usrRunthrus)
         cipher.showLauncher()
 
     elif choice == "6":
