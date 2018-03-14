@@ -1,3 +1,4 @@
+from random import choice
 class Set:
     def __init__(self, content):
         self.content = content
@@ -21,20 +22,32 @@ class Set:
     def subtract(self, set2):
         return self.set.difference(set2)
 
-class Cards:
-    def __init__(self,rank,suit,value):
-        self.rank = rank
-        self.suit = suit
-        self.value = value
+def buildDeck(): # returns dict
+    cardfile = open("cards.txt","r")
+    lines = cardfile.readlines()
+    cardfile.close()
+    deck = {}
+    for line in lines:
+        rank = line.split("|")[0].replace("\n","")
+        suit = line.split("|")[1].replace("\n","")
+        value = line.split("|")[2].replace("\n","")
+        deck.update({f"{value}{suit}":{"rank":rank, "value":value, "suit":suit}})
+    return deck
 
-def buildDeck():
-    cardsfile = open("cards.txt","r")
-    contents = cardsfile.readlines()
-    counter = 1
-    for line in contents:
-        while counter < 52:
-            rank = line.split("|")[0]
-            suit = line.split("|")[1]
-            value = line.split("|")[2]
-            exec(f"{card}{counter} = Cards(rank,suit,value)")
-            counter += 1
+def dealHand(amt): # takes int for amt and returns hand as a list
+    hand = []
+    for count in range(1,amt+1):
+        randcard = choice(list(deck.keys()))
+        hand.append(randcard)
+    return hand
+
+def checkHand(hand):
+    ranks = [deck[i]["rank"] for i in hand]
+    suits = [deck[i]["suit"] for i in hand]
+    value = [deck[i]["value"] for i in hand]
+    print(ranks,suits,value)
+
+deck = buildDeck()
+hand = dealHand(amt=5)
+print(hand)
+checkHand(hand)
