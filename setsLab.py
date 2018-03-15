@@ -41,9 +41,10 @@ def dealHand(amt): # takes int for amt and returns hand as a list
         hand.append(randcard)
     return hand
 
-def allSame(ls):
-    for item in ls:
-        if ls[0] == item: same = True
+def allSame(ls,count):
+    sortls = sorted(ls)
+    for num in range(0,count+1):
+        if sortls[0] == sortls[num]: same = True
         else:
             same = False
             break
@@ -60,13 +61,37 @@ def checkHand(hand):
     # Two pair – two each of two ranks
     # Pair – two of same rank (not part of any other hand)
     # X High – If none above fit, X is the highest rank in hand.
+
+
     ranks = [deck[i]["rank"] for i in hand]
     suits = [deck[i]["suit"] for i in hand]
     values = [deck[i]["value"] for i in hand]
-    if "10" in values and "J" in values and "Q" in values and "K" in values and "A" in values and allSame(suits):
+    ### ROYAL FLUSH ###
+    if "10" in values and "J" in values and "Q" in values and "K" in values and "A" in values and allSame(suits, 4):
         royalFlush = True
+    else:
+        royalFlush = False
+
+    ### STRAIGHT FLUSH ###
+    if allSame(ranks, 4) and allSame(suits, 4): straightFlush = True
+    else: straightFlush = False
+
+    ### FOUR OF A KIND ###
+    if allSame(ranks, 3): fourKind = True
+    else: fourKind = False
+
+    ### FULL HOUSE ###
+
+    ### FLUSH ###
+    if allSame(suits, 4): flush = True
+    else: flush = False
+
+    return {"royalFlush":royalFlush, "straightFlush":straightFlush, "fourKind":fourKind, "flush":flush}
 
 deck = buildDeck()
-hand = dealHand(amt=5)
-print(hand)
-checkHand(hand)
+handData = {"fourKind":False}
+while handData["fourKind"] is False:
+    hand = dealHand(amt=5)
+    print(hand)
+    handData = checkHand(hand)
+    print(handData)
