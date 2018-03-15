@@ -34,7 +34,7 @@ def buildDeck(): # returns dict
         deck.update({f"{value}{suit}":{"rank":rank, "value":value, "suit":suit}})
     return deck
 
-def dealHand(amt): # takes int for amt and returns hand as a list
+def dealHand(amt, deck): # takes int for amt and returns hand as a list
     hand = []
     for count in range(1,amt+1):
         randcard = choice(list(deck.keys()))
@@ -97,10 +97,11 @@ def checkHand(hand):
 
     return {"royalFlush":royalFlush, "straightFlush":straightFlush, "fourKind":fourKind, "fullHouse":fullHouse, "flush":flush}
 
-deck = buildDeck()
-handData = {"fullHouse":False}
-while handData["fullHouse"] is False:
-    hand = dealHand(amt=5)
-    print(hand)
-    handData = checkHand(hand)
-    print(handData)
+if __name__ == "__main__":
+    deck = buildDeck()
+    handData = {"fullHouse":False}
+    while handData["fullHouse"] is False:
+        hand = dealHand(amt=5, deck=deck)
+        print(hand)
+        handData = checkHand(hand)
+        print(handData)
