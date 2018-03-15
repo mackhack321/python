@@ -50,6 +50,13 @@ def allSame(ls,count):
             break
     return same
 
+def checkFullHouse(ls):
+    threeSame = allSame(ls,2)
+    if threeSame:
+        twoSame = allSame(ls,1)
+        if twoSame: fullHouse = True
+    else: fullHouse = False
+
 def checkHand(hand):
     # Royal flush – 10, Jack, Queen, King, Ace all same suit
     # Straight flush – five ranks in a row, all same suit
@@ -81,16 +88,18 @@ def checkHand(hand):
     else: fourKind = False
 
     ### FULL HOUSE ###
+    if checkFullHouse(ranks): fullHouse = True
+    else: fullHouse = False
 
     ### FLUSH ###
     if allSame(suits, 4): flush = True
     else: flush = False
 
-    return {"royalFlush":royalFlush, "straightFlush":straightFlush, "fourKind":fourKind, "flush":flush}
+    return {"royalFlush":royalFlush, "straightFlush":straightFlush, "fourKind":fourKind, "fullHouse":fullHouse, "flush":flush}
 
 deck = buildDeck()
-handData = {"fourKind":False}
-while handData["fourKind"] is False:
+handData = {"fullHouse":False}
+while handData["fullHouse"] is False:
     hand = dealHand(amt=5)
     print(hand)
     handData = checkHand(hand)
