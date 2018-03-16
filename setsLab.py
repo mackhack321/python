@@ -1,4 +1,8 @@
 from random import choice
+from sys import argv
+try: argv[1]
+except: argv.append("-n")
+
 class Set:
     def __init__(self, content):
         self.content = content
@@ -21,6 +25,8 @@ class Set:
 
     def subtract(self, set2):
         return self.set.difference(set2)
+
+### Here is where the fun begins ###
 
 def buildDeck(): # returns dict
     cardfile = open("cards.txt","r")
@@ -85,6 +91,9 @@ def checkPair(ls):
     else: pair = False
     return pair
 
+def getXHigh(ls):
+    return sorted(ls)[4]
+
 def checkHand(hand):
     # Pair – two of same rank (not part of any other hand)
     # X High – If none above fit, X is the highest rank in hand.
@@ -93,10 +102,8 @@ def checkHand(hand):
     suits = [deck[i]["suit"] for i in hand]
     values = [deck[i]["value"] for i in hand]
     ### ROYAL FLUSH ###
-    if checkRoyalFlush(values,suits):
-        royalFlush = True
-    else:
-        royalFlush = False
+    if checkRoyalFlush(values,suits): royalFlush = True
+    else: royalFlush = False
 
     ### STRAIGHT FLUSH ###
     if allSame(ranks, 4) and allSame(suits, 4): straightFlush = True
@@ -127,17 +134,36 @@ def checkHand(hand):
     else: twoPairs = False
 
     ### PAIR ###
-    if checkPair(ranks) and not checkTwoPairs(ranks) and not : pair = True
+    if checkPair(ranks): pair = True
     else: pair = False
 
+    ### X High ###
+    xhigh = getXHigh(ranks)
+    if royalFlush == straightFlush == fourKind == fullHouse == flush == straight == threeKind == twoPairs == pair == False: doXHigh = True
+    else: doXHigh = False
+
     return {"royalFlush":royalFlush, "straightFlush":straightFlush, "fourKind":fourKind, "fullHouse":fullHouse, "flush":flush,
-            "straight":straight, "threeKind":threeKind, "twoPairs":twoPairs, "pair":pair}
+            "straight":straight, "threeKind":threeKind, "twoPairs":twoPairs, "pair":pair, "doXHigh":doXHigh, "xhigh":xhigh}
+
+def displayResults(handData):
+    if handData["royalFlush"]: print("Royal Flush!")
+    elif handData["straightFlush"]: print("Straight Flush!")
+    elif handData["fourKind"]: print("Four of a Kind!")
+    elif handData["fullHouse"]: print("Full House!")
+    elif handData["flush"]: print("Flush!")
+    elif handData["straight"]: print("Straight")
+    elif handData["threeKind"]: print("Three of a Kind!")
+    elif handData["twoPairs"]: print("Two pairs!")
+    elif handData["pair"]: print("Pair!")
+    elif handData["doXHigh"]: print("X High:",handData["xhigh"])
 
 if __name__ == "__main__":
-    deck = buildDeck()
-    handData = {"pair":False}
-    while handData["pair"] is False:
+    again = "y"
+    while again == "y":
+        deck = buildDeck()
         hand = dealHand(amt=5, deck=deck)
         print(hand)
         handData = checkHand(hand)
-        print(handData)
+        if argv[1] == "-v": print(handData)
+        else: displayResults(handData)
+        again = input("Deal another hand and check? y or n: ")
