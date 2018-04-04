@@ -3,6 +3,7 @@ from sys import exit
 from nicecolors import *
 import pickle as pkl
 from random import choice
+from time import sleep
 
 pg.init()
 pg.display.set_caption("Software Developer Simulator 1989")
@@ -46,7 +47,6 @@ def doClick():
     if keyboard.rect.collidepoint(pos) == 1:
         playSound("keypress")
         points.add(1)
-        print(points.points)
         changeMonitorImage()
 
 def drawAll():
@@ -88,12 +88,19 @@ def saveData(score, filename):
     playerdata = {"score":score}
     pkl.dump(playerdata, open(filename,"wb"))
 
+def doQuitSequence():
+    playSound("winshutdown")
+    sleep(2)
+    saveData(points.points, "playerdata.pkl")
+    pg.quit()
+    exit()
+
 background = Sprite("data/background.jpg")
 background.resize(500,500)
 background.draw()
 
 keyboard = Sprite("data/keyboard.png")
-keyboard.resize(443,180)
+keyboard.resize(497,202)
 keyboard.repos(250,400)
 keyboard.draw()
 
@@ -108,5 +115,5 @@ while not quit:
     displayPoints(points.points)
     pg.display.update()
     for event in pg.event.get():
-        if event.type == pg.QUIT: playSound("winshutdown"); saveData(points.points, "playerdata.pkl"); pg.quit(); exit()
+        if event.type == pg.QUIT: doQuitSequence()
         if event.type == pg.MOUSEBUTTONDOWN: doClick()
