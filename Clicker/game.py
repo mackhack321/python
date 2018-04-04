@@ -2,6 +2,7 @@ import pygame as pg
 from sys import exit
 from nicecolors import *
 import pickle as pkl
+from random import choice
 
 pg.init()
 pg.display.set_caption("Software Developer Simulator 1989")
@@ -10,6 +11,11 @@ pg.display.update()
 
 class Sprite(object):
     def __init__(self, filepath):
+        self.current_image = filepath
+        self.image = pg.image.load(filepath)
+        self.rect = self.image.get_rect()
+    def reImage(self, filepath):
+        self.current_image = filepath
         self.image = pg.image.load(filepath)
         self.rect = self.image.get_rect()
     def resize(self, l, w):
@@ -37,12 +43,35 @@ class Score:
 
 def doClick():
     pos = pg.mouse.get_pos()
-    if keyboard.rect.collidepoint(pos) == 1: points.add(1); print(points.points)
+    if keyboard.rect.collidepoint(pos) == 1:
+        playSound("keypress")
+        points.add(1)
+        print(points.points)
+        changeMonitorImage()
 
-def displayPoints(score):
+def drawAll():
     background.draw()
     keyboard.draw()
-    myfont = pg.font.SysFont("Comic Sans MS",30)
+    monitor.draw()
+
+def playSound(sound):
+    if sound == "keypress":
+        pg.mixer.music.load("data/keypress.wav")
+        pg.mixer.music.play(0)
+    elif sound == "winshutdown":
+        pg.mixer.music.load("data/winshutdown.wav")
+        pg.mixer.music.play(0)
+
+def changeMonitorImage():
+    images = ["data/monitor01.png","data/monitor02.png","data/monitor03.png"]
+    monitor.reImage(choice(images))
+    monitor.resize(358,256)
+    monitor.repos(250,150)
+    monitor.draw()
+
+def displayPoints(score):
+    drawAll()
+    myfont = pg.font.SysFont("Impact",30)
     text = myfont.render(f"Score: {score}",True,WHITE)
     screen.blit(text,(0,0))
     pg.display.update()
@@ -68,11 +97,16 @@ keyboard.resize(443,180)
 keyboard.repos(250,400)
 keyboard.draw()
 
+monitor = Sprite("data/monitor00.png")
+monitor.resize(358,256)
+monitor.repos(250,150)
+monitor.draw()
+
 quit = False
-points = Score(loadData("player.pkl"))
+points = Score(loadData("playerdata.pkl"))
 while not quit:
     displayPoints(points.points)
     pg.display.update()
     for event in pg.event.get():
-        if event.type == pg.QUIT: saveData(points.points, "player.pkl"); pg.quit(); exit()
+        if event.type == pg.QUIT: playSound("winshutdown"); saveData(points.points, "playerdata.pkl"); pg.quit(); exit()
         if event.type == pg.MOUSEBUTTONDOWN: doClick()
