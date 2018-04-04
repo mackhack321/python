@@ -56,14 +56,11 @@ def drawAll():
 
 def playSound(sound):
     if sound == "keypress":
-        pg.mixer.music.load("data/keypress.wav")
-        pg.mixer.music.play(0)
+        keyChannel.play(keysound, 0)
     elif sound == "winshutdown":
-        pg.mixer.music.load("data/winshutdown.wav")
-        pg.mixer.music.play(0)
+        shutdownChannel.play(winshutdown, 0)
     elif sound == "bgmusic":
-        pg.mixer.music.load("data/music.wav")
-        pg.mixer.music.play(-1)
+        musicChannel.play(bgmusic, 1)
 
 def changeMonitorImage():
     images = ["data/monitor01.png","data/monitor02.png","data/monitor03.png"]
@@ -92,6 +89,7 @@ def saveData(score, filename):
     pkl.dump(playerdata, open(filename,"wb"))
 
 def doQuitSequence():
+    musicChannel.stop()
     playSound("winshutdown")
     sleep(2)
     saveData(points.points, "playerdata.pkl")
@@ -111,6 +109,13 @@ monitor = Sprite("data/monitor00.png")
 monitor.resize(358,256)
 monitor.repos(250,150)
 monitor.draw()
+
+keysound = pg.mixer.Sound("data/keypress.wav")
+winshutdown = pg.mixer.Sound("data/winshutdown.wav")
+bgmusic = pg.mixer.Sound("data/music.wav")
+musicChannel = pg.mixer.Channel(0)
+keyChannel = pg.mixer.Channel(1)
+shutdownChannel = pg.mixer.Channel(2)
 
 quit = False
 points = Score(loadData("playerdata.pkl"))
