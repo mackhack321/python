@@ -32,17 +32,18 @@ lpaddle.draw()
 rpaddle.draw()
 
 gameover = False
+up = down = False
 while not gameover:
     clock.tick(60)
+    if up and lpaddle.rect.top != 0: lpaddle.move(-5); print(lpaddle.rect.top)
+    if down and lpaddle.rect.top != 400: lpaddle.move(5); print(lpaddle.rect.top)
+
     for event in pg.event.get():
         if event.type == pg.QUIT:
             gameover = True
         if event.type == pg.KEYDOWN:
-            print(event)
-            keys = pg.key.get_pressed()
-            if keys[pg.K_UP]:
-                print("up")
-                #lpaddle.move(-1)
-            if keys[pg.K_DOWN]:
-                print("down")
-                #lpaddle.move(1)
+            if event.key == pg.K_UP: up = True
+            if event.key == pg.K_DOWN: down = True
+        if event.type == pg.KEYUP:
+            if event.key == pg.K_UP: up = False
+            if event.key == pg.K_DOWN: down = False
