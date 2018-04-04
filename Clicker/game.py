@@ -61,6 +61,9 @@ def playSound(sound):
     elif sound == "winshutdown":
         pg.mixer.music.load("data/winshutdown.wav")
         pg.mixer.music.play(0)
+    elif sound == "bgmusic":
+        pg.mixer.music.load("data/music.wav")
+        pg.mixer.music.play(-1)
 
 def changeMonitorImage():
     images = ["data/monitor01.png","data/monitor02.png","data/monitor03.png"]
@@ -111,6 +114,7 @@ monitor.draw()
 
 quit = False
 points = Score(loadData("playerdata.pkl"))
+playSound("bgmusic")
 while not quit:
     displayPoints(points.points)
     pg.display.update()
