@@ -4,11 +4,36 @@ from nicecolors import *
 import pickle as pkl
 from random import choice
 from time import sleep
-
+### Initialize Pygame, make window ###
 pg.init()
 pg.display.set_caption("Software Developer Simulator 1989")
 screen = pg.display.set_mode((500,500))
 pg.display.update()
+### Set up classes and functions ###
+class Player():
+    def __init__(self, name):
+        self.name = name
+        self.mult = 1
+        self.score = 0
+    def setMult(self, newmult):
+        self.mult = newmult
+    def setScore(self, newscore):
+        self.score = newscore
+    def addPoints(self, amt):
+        self.score += amt
+    def subPoints(self,amt):
+        self.score -= amt
+    def loadData(self, filename):
+        try:
+            data = pkl.load(open(filename,"rb"))
+            self.setScore(data["score"])
+            self.setMult(data["mult"])
+        except: pass
+    def saveData(self,filename):
+        pkl.dump({"score":self.score, "mult":self.mult}, open(filename,"wb"))
+    def reset(self):
+        self.mult = 1
+        self.score = 0
 
 class Sprite(object):
     def __init__(self, filepath):
@@ -29,24 +54,11 @@ class Sprite(object):
         screen.blit(self.image,self.rect)
     pg.display.update()
 
-class Score:
-    def __init__(self, points):
-        try:
-            if points > 0:
-                self.points = points
-            else:
-                self.points = 0
-        except: self.points = 0
-    def add(self, amt):
-        self.points += amt
-    def subtract(self,amt):
-        self.points -= amt
-
-def doClick():
+def doClick(mult):
     pos = pg.mouse.get_pos()
     if keyboard.rect.collidepoint(pos) == 1:
         playSound("keypress")
-        points.add(1)
+        player.addPoints(mult)
         changeMonitorImage()
 
 def drawAll():
@@ -60,7 +72,8 @@ def playSound(sound):
     elif sound == "winshutdown":
         shutdownChannel.play(winshutdown, 0)
     elif sound == "bgmusic":
-        musicChannel.play(bgmusic, 1)
+        musicChannel.play(bgmusic, -1)
+        musicChannel.set_volume(.25)
 
 def changeMonitorImage():
     images = ["data/monitor01.png","data/monitor02.png","data/monitor03.png"]
@@ -72,30 +85,18 @@ def changeMonitorImage():
 def displayPoints(score):
     drawAll()
     myfont = pg.font.SysFont("Impact",30)
-    text = myfont.render(f"Score: {score}",True,WHITE)
+    text = myfont.render(f"Name: {player.name}, Score: {player.score}, Mult: {player.mult}",True,WHITE)
     screen.blit(text,(0,0))
     pg.display.update()
 
-def loadData(filename):
-    try:
-        playerdata = pkl.load(open(filename,"rb"))
-        score = playerdata["score"]
-        return score
-    except:
-        pass
-
-def saveData(score, filename):
-    playerdata = {"score":score}
-    pkl.dump(playerdata, open(filename,"wb"))
-
 def doQuitSequence():
-    musicChannel.stop()
+    musicChannel.fadeout(500)
     playSound("winshutdown")
     sleep(2)
-    saveData(points.points, "playerdata.pkl")
+    player.saveData(f"players/{player.name}.pkl")
     pg.quit()
     exit()
-
+### Make Sprites ###
 background = Sprite("data/background.jpg")
 background.resize(500,500)
 background.draw()
@@ -109,20 +110,23 @@ monitor = Sprite("data/monitor00.png")
 monitor.resize(358,256)
 monitor.repos(250,150)
 monitor.draw()
-
+### Make sound objects and channels, start bg music ###
 keysound = pg.mixer.Sound("data/keypress.wav")
 winshutdown = pg.mixer.Sound("data/winshutdown.wav")
 bgmusic = pg.mixer.Sound("data/music.wav")
 musicChannel = pg.mixer.Channel(0)
 keyChannel = pg.mixer.Channel(1)
 shutdownChannel = pg.mixer.Channel(2)
-
-quit = False
-points = Score(loadData("playerdata.pkl"))
 playSound("bgmusic")
-while not quit:
-    displayPoints(points.points)
+### Make and get player data ###
+player = Player("debug") # EDIT THIS ARGUMENT TO CHANGE PLAYER PROFILE!!!!!
+player.loadData(f"players/{player.name}.pkl")
+if player.name == "debug": print("Debugging!");player.setMult(10)
+### Game loop ###
+running = True
+while running:
+    displayPoints(player.score)
     pg.display.update()
     for event in pg.event.get():
         if event.type == pg.QUIT: doQuitSequence()
-        if event.type == pg.MOUSEBUTTONDOWN: doClick()
+        if event.type == pg.MOUSEBUTTONDOWN: doClick(player.mult)
