@@ -7,8 +7,9 @@ from time import sleep
 ### Initialize Pygame, make window ###
 pg.init()
 pg.display.set_caption("Software Developer Simulator 1989")
-screen = pg.display.set_mode((500,500))
+screen = pg.display.set_mode((1000,1000))
 pg.display.update()
+pg.mouse.set_visible(False)
 ### Set up classes and functions ###
 class Player():
     def __init__(self, name):
@@ -44,12 +45,15 @@ class Sprite(object):
         self.current_image = filepath
         self.image = pg.image.load(filepath)
         self.rect = self.image.get_rect()
+        self.resize(self.scale[0],self.scale[1])
+        self.repos(self.currentx,self.currenty)
     def resize(self, l, w):
+        self.scale = (l,w)
         self.image = pg.transform.scale(self.image, (l,w))
         self.rect = self.image.get_rect()
     def repos(self, centerx, centery):
-        self.rect.centerx = centerx
-        self.rect.centery = centery
+        self.rect.centerx = self.currentx = centerx
+        self.rect.centery = self.currenty = centery
     def draw(self):
         screen.blit(self.image,self.rect)
     pg.display.update()
@@ -65,6 +69,8 @@ def drawAll():
     background.draw()
     keyboard.draw()
     monitor.draw()
+    guido.draw()
+    newkeeb.draw()
 
 def playSound(sound):
     if sound == "keypress":
@@ -78,9 +84,6 @@ def playSound(sound):
 def changeMonitorImage():
     images = ["data/monitor01.png","data/monitor02.png","data/monitor03.png"]
     monitor.reImage(choice(images))
-    monitor.resize(358,256)
-    monitor.repos(250,150)
-    monitor.draw()
 
 def displayPoints(score):
     drawAll()
@@ -98,18 +101,27 @@ def doQuitSequence():
     exit()
 ### Make Sprites ###
 background = Sprite("data/background.jpg")
-background.resize(500,500)
+background.resize(1000,1000)
 background.draw()
 
 keyboard = Sprite("data/keyboard.png")
-keyboard.resize(497,202)
-keyboard.repos(250,400)
+keyboard.resize(994,404)
+keyboard.repos(500,800)
 keyboard.draw()
 
 monitor = Sprite("data/monitor00.png")
-monitor.resize(358,256)
-monitor.repos(250,150)
+monitor.resize(716,512)
+monitor.repos(500,300)
 monitor.draw()
+
+guido = Sprite("data/rossum.png")
+guido.resize(70,105)
+guido.draw()
+
+newkeeb = Sprite("data/newkeeb.png")
+newkeeb.resize(392,100)
+newkeeb.repos(500,500)
+newkeeb.draw()
 ### Make sound objects and channels, start bg music ###
 keysound = pg.mixer.Sound("data/keypress.wav")
 winshutdown = pg.mixer.Sound("data/winshutdown.wav")
@@ -121,11 +133,12 @@ playSound("bgmusic")
 ### Make and get player data ###
 player = Player("debug") # EDIT THIS ARGUMENT TO CHANGE PLAYER PROFILE!!!!!
 player.loadData(f"players/{player.name}.pkl")
-if player.name == "debug": print("Debugging!");player.setMult(10)
+if player.name == "debug": print("Debugging!"); player.setMult(10)
 ### Game loop ###
 running = True
 while running:
     displayPoints(player.score)
+    guido.repos(pg.mouse.get_pos()[0],pg.mouse.get_pos()[1])
     pg.display.update()
     for event in pg.event.get():
         if event.type == pg.QUIT: doQuitSequence()
