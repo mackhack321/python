@@ -128,7 +128,7 @@ def playSound(sound):
         buysoundChannel.play(buysound, 0)
 
 def changeMonitorImage():
-    images = ["data/monitor01.png","data/monitor02.png","data/monitor03.png","data/monitor04.png","data/monitor05.png","data/monitor06.png","data/monitor07.png","data/monitorbsod.png"]
+    images = ["data/monitors/monitor01.png","data/monitors/monitor02.png","data/monitors/monitor03.png","data/monitors/monitor04.png","data/monitors/monitor05.png","data/monitors/monitor06.png","data/monitors/monitor07.png","data/monitors/monitor08.png"]
     monitor.reImage(choice(images))
 
 def displayPoints(score):
@@ -146,62 +146,62 @@ def doQuitSequence():
     pg.quit()
     exit()
 ### Make Sprites ###
-background = Sprite("data/background.jpg")
+background = Sprite("data/sprites/background.jpg")
 background.resize(1000,1000)
 background.draw()
 
-keyboard = Sprite("data/keyboard.png")
+keyboard = Sprite("data/sprites/keyboard.png")
 keyboard.resize(497,202)
 keyboard.repos(500,825)
 keyboard.draw()
 
-monitor = Sprite("data/monitor00.png")
+monitor = Sprite("data/monitors/monitor00.png")
 monitor.resize(716,512)
 monitor.repos(500,300)
 monitor.draw()
 
-newkeeb = Sprite("data/newkeeb.png")
+newkeeb = Sprite("data/sprites/newkeeb.png")
 newkeeb_obj = Upgrade("New Keeb",50,3)
 newkeeb.resize(392,100)
 newkeeb.repos(238,627)
 newkeeb.draw()
 
-newide = Sprite("data/newide.png")
+newide = Sprite("data/sprites/newide.png")
 newide_obj = Upgrade("New IDE",150,5)
 newide.resize(245,75)
 newide.repos(537,620)
 newide.draw()
 
-topkek = Sprite("data/topkek.png")
+topkek = Sprite("data/sprites/topkek.png")
 topkek_obj = Upgrade("Topkek",300,10)
 topkek.resize(250,82)
 topkek.repos(785,615)
 topkek.draw()
 
-upgradebanner = Sprite("data/upgradebanner.png")
+upgradebanner = Sprite("data/sprites/upgradebanner.png")
 upgradebanner.resize(782,132)
 upgradebanner.repos(500,690)
 upgradebanner.draw()
 
-instructions = Sprite("data/instructions.png")
+instructions = Sprite("data/sprites/instructions.png")
 instructions.resize(966,163)
 instructions.repos(500,960)
 instructions.draw()
 
-reset = Sprite("data/reset.png")
+reset = Sprite("data/sprites/reset.png")
 reset.resize(100,100)
 reset.repos(75,300)
 reset.draw()
 
-guido = Sprite("data/rossum.png")
+guido = Sprite("data/sprites/rossum.png")
 guido.resize(70,105)
 guido.draw()
 ### Make sound objects and channels, start bg music ###
-keysound = pg.mixer.Sound("data/keypress.wav")
-winshutdown = pg.mixer.Sound("data/winshutdown.wav")
-bgmusic = pg.mixer.Sound("data/music.wav")
-buysound = pg.mixer.Sound("data/buysound.wav")
-resetsound = pg.mixer.Sound("data/resetsound.wav")
+keysound = pg.mixer.Sound("data/sounds/keypress.wav")
+winshutdown = pg.mixer.Sound("data/sounds/winshutdown.wav")
+bgmusic = pg.mixer.Sound("data/sounds/music.wav")
+buysound = pg.mixer.Sound("data/sounds/buysound.wav")
+resetsound = pg.mixer.Sound("data/sounds/resetsound.wav")
 musicChannel = pg.mixer.Channel(0)
 keyChannel = pg.mixer.Channel(1)
 shutdownChannel = pg.mixer.Channel(2)
