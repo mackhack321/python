@@ -2,7 +2,7 @@ import pygame as pg
 from sys import exit
 from nicecolors import *
 import pickle as pkl
-from random import choice
+from random import choice, randint
 from time import sleep
 ### Initialize Pygame, make window ###
 pg.init()
@@ -199,7 +199,8 @@ guido.draw()
 ### Make sound objects and channels, start bg music ###
 keysound = pg.mixer.Sound("data/sounds/keypress.wav")
 winshutdown = pg.mixer.Sound("data/sounds/winshutdown.wav")
-bgmusic = pg.mixer.Sound("data/sounds/music.wav")
+if randint(1,5) == 3: bgmusic = pg.mixer.Sound("data/sounds/gambler.wav")
+else: bgmusic = pg.mixer.Sound("data/sounds/music.wav")
 buysound = pg.mixer.Sound("data/sounds/buysound.wav")
 resetsound = pg.mixer.Sound("data/sounds/resetsound.wav")
 musicChannel = pg.mixer.Channel(0)
