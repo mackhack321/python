@@ -16,6 +16,7 @@ class Player():
         self.name = name
         self.mult = 1
         self.score = 0
+        self.candrag = False
     def setMult(self, newmult):
         self.mult = newmult
     def setScore(self, newscore):
@@ -80,10 +81,19 @@ def doClick(mult):
         player.addPoints(mult)
         changeMonitorImage()
     if newkeeb.rect.collidepoint(pos) == 1:
+        if player.candrag:
+            newkeeb.repos(pg.mouse.get_pos()[0],pg.mouse.get_pos()[1])
+            print("New Keeb: ",newkeeb.currentx,newkeeb.currenty)
         newkeeb_obj.buy()
     if newide.rect.collidepoint(pos) == 1:
+        if player.candrag:
+            newide.repos(pg.mouse.get_pos()[0],pg.mouse.get_pos()[1])
+            print("New IDE: ",newide.currentx,newide.currenty)
         newide_obj.buy()
     if topkek.rect.collidepoint(pos) == 1:
+        if player.candrag:
+            topkek.repos(pg.mouse.get_pos()[0],pg.mouse.get_pos()[1])
+            print("Topkek: ",topkek.currentx,topkek.currenty)
         topkek_obj.buy()
 
 def drawAll():
@@ -93,7 +103,9 @@ def drawAll():
     newkeeb.draw()
     newide.draw()
     topkek.draw()
-    guido.draw()
+    upgradebanner.draw()
+    instructions.draw()
+    guido.draw() # this must be last to go over everything else
 
 def playSound(sound):
     if sound == "keypress":
@@ -105,14 +117,14 @@ def playSound(sound):
         musicChannel.set_volume(.25)
 
 def changeMonitorImage():
-    images = ["data/monitor01.png","data/monitor02.png","data/monitor03.png"]
+    images = ["data/monitor01.png","data/monitor02.png","data/monitor03.png","data/monitor04.png","data/monitor05.png","data/monitor06.png","data/monitor07.png"]
     monitor.reImage(choice(images))
 
 def displayPoints(score):
     drawAll()
     myfont = pg.font.SysFont("Impact",30)
-    text = myfont.render(f"Name: {player.name}, Score: {player.score}, Mult: {player.mult}",True,WHITE)
-    screen.blit(text,(0,0))
+    text = myfont.render(f"Name: {player.name}, Score: {player.score}, Multiplier: {player.mult}",True,WHITE)
+    screen.blit(text,(250,0))
     pg.display.update()
 
 def doQuitSequence():
@@ -129,7 +141,7 @@ background.draw()
 
 keyboard = Sprite("data/keyboard.png")
 keyboard.resize(497,202)
-keyboard.repos(500,800)
+keyboard.repos(500,825)
 keyboard.draw()
 
 monitor = Sprite("data/monitor00.png")
@@ -140,20 +152,30 @@ monitor.draw()
 newkeeb = Sprite("data/newkeeb.png")
 newkeeb_obj = Upgrade("New Keeb",50,3)
 newkeeb.resize(392,100)
-newkeeb.repos(200,635)
+newkeeb.repos(238,627)
 newkeeb.draw()
 
 newide = Sprite("data/newide.png")
 newide_obj = Upgrade("New IDE",150,5)
 newide.resize(245,75)
-newide.repos(500,620)
+newide.repos(537,620)
 newide.draw()
 
 topkek = Sprite("data/topkek.png")
-topkek_obj = Upgrade("Topkek",500,10)
+topkek_obj = Upgrade("Topkek",300,10)
 topkek.resize(250,82)
-topkek.repos(750,620)
+topkek.repos(785,615)
 topkek.draw()
+
+upgradebanner = Sprite("data/upgradebanner.png")
+upgradebanner.resize(782,132)
+upgradebanner.repos(500,690)
+upgradebanner.draw()
+
+instructions = Sprite("data/instructions.png")
+instructions.resize(966,163)
+instructions.repos(500,960)
+instructions.draw()
 
 guido = Sprite("data/rossum.png")
 guido.resize(70,105)
@@ -167,7 +189,8 @@ keyChannel = pg.mixer.Channel(1)
 shutdownChannel = pg.mixer.Channel(2)
 playSound("bgmusic")
 ### Make and get player data ###
-player = Player("debug") # EDIT THIS ARGUMENT TO CHANGE PLAYER PROFILE!!!!!
+player = Player("Mack") # EDIT THIS ARGUMENT TO CHANGE PLAYER PROFILE!!!!!
+if player.name == "debug": player.candrag = False # CHANGE TO TRUE TO LET debug DRAG UPGRADES
 player.loadData(f"players/{player.name}.pkl")
 ### Game loop ###
 running = True
