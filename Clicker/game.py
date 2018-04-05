@@ -58,19 +58,42 @@ class Sprite(object):
         screen.blit(self.image,self.rect)
     pg.display.update()
 
+class Upgrade:
+    def __init__(self,name,cost,multupgrade):
+        self.name = name
+        self.cost = cost
+        self.multupgrade = multupgrade
+    def buy(self):
+        if player.score >= self.cost:
+            player.setMult(player.mult+self.multupgrade)
+            player.subPoints(self.cost)
+            myfont = pg.font.SysFont("Comic Sans MS",30)
+            text = myfont.render(f"Bought {self.name}!",True,WHITE)
+            screen.blit(text,(350,500))
+            pg.display.update()
+            sleep(1)
+
 def doClick(mult):
     pos = pg.mouse.get_pos()
     if keyboard.rect.collidepoint(pos) == 1:
         playSound("keypress")
         player.addPoints(mult)
         changeMonitorImage()
+    if newkeeb.rect.collidepoint(pos) == 1:
+        newkeeb_obj.buy()
+    if newide.rect.collidepoint(pos) == 1:
+        newide_obj.buy()
+    if topkek.rect.collidepoint(pos) == 1:
+        topkek_obj.buy()
 
 def drawAll():
     background.draw()
     keyboard.draw()
     monitor.draw()
-    guido.draw()
     newkeeb.draw()
+    newide.draw()
+    topkek.draw()
+    guido.draw()
 
 def playSound(sound):
     if sound == "keypress":
@@ -93,9 +116,9 @@ def displayPoints(score):
     pg.display.update()
 
 def doQuitSequence():
-    musicChannel.fadeout(500)
-    playSound("winshutdown")
-    sleep(2)
+    #musicChannel.fadeout(500)
+    #playSound("winshutdown")
+    #sleep(2)
     player.saveData(f"players/{player.name}.pkl")
     pg.quit()
     exit()
@@ -105,7 +128,7 @@ background.resize(1000,1000)
 background.draw()
 
 keyboard = Sprite("data/keyboard.png")
-keyboard.resize(994,404)
+keyboard.resize(497,202)
 keyboard.repos(500,800)
 keyboard.draw()
 
@@ -114,14 +137,27 @@ monitor.resize(716,512)
 monitor.repos(500,300)
 monitor.draw()
 
+newkeeb = Sprite("data/newkeeb.png")
+newkeeb_obj = Upgrade("New Keeb",50,3)
+newkeeb.resize(392,100)
+newkeeb.repos(200,635)
+newkeeb.draw()
+
+newide = Sprite("data/newide.png")
+newide_obj = Upgrade("New IDE",150,5)
+newide.resize(245,75)
+newide.repos(500,620)
+newide.draw()
+
+topkek = Sprite("data/topkek.png")
+topkek_obj = Upgrade("Topkek",500,10)
+topkek.resize(250,82)
+topkek.repos(750,620)
+topkek.draw()
+
 guido = Sprite("data/rossum.png")
 guido.resize(70,105)
 guido.draw()
-
-newkeeb = Sprite("data/newkeeb.png")
-newkeeb.resize(392,100)
-newkeeb.repos(500,500)
-newkeeb.draw()
 ### Make sound objects and channels, start bg music ###
 keysound = pg.mixer.Sound("data/keypress.wav")
 winshutdown = pg.mixer.Sound("data/winshutdown.wav")
@@ -133,7 +169,6 @@ playSound("bgmusic")
 ### Make and get player data ###
 player = Player("debug") # EDIT THIS ARGUMENT TO CHANGE PLAYER PROFILE!!!!!
 player.loadData(f"players/{player.name}.pkl")
-if player.name == "debug": print("Debugging!"); player.setMult(10)
 ### Game loop ###
 running = True
 while running:
