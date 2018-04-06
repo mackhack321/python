@@ -8,6 +8,7 @@ from time import sleep
 pg.init()
 pg.display.set_caption("Software Developer Simulator 1989")
 screen = pg.display.set_mode((1000,1000))
+clock = pg.time.Clock()
 pg.display.update()
 pg.mouse.set_visible(False)
 ### Set up classes and functions ###
@@ -31,9 +32,10 @@ class Player():
             data = pkl.load(open(filename,"rb"))
             self.setScore(data["score"])
             self.setMult(data["mult"])
+            self.maxscore = data["hasmax"]
         except: pass
     def saveData(self,filename):
-        pkl.dump({"score":self.score, "mult":self.mult}, open(filename,"wb"))
+        pkl.dump({"score":self.score, "mult":self.mult, "hasmax":self.maxscore}, open(filename,"wb"))
     def reset(self):
         resetChannel.play(resetsound,0)
         self.maxscore = False
@@ -80,28 +82,28 @@ class Upgrade:
                 sleep(1)
 
 def doClick(mult):
-    if pg.mouse.get_pressed()[0]:
+    if pg.mouse.get_pressed()[0] or keydown:
         pos = pg.mouse.get_pos()
-        if keyboard.rect.collidepoint(pos) == 1:
+        if keyboard.rect.collidepoint(pos) == 1 or keydown:
             playSound("keypress")
             player.addPoints(mult)
             changeMonitorImage()
-        if newkeeb.rect.collidepoint(pos) == 1:
+        if newkeeb.rect.collidepoint(pos) == 1 and not keydown:
             if player.candrag:
                 newkeeb.repos(pg.mouse.get_pos()[0],pg.mouse.get_pos()[1])
                 print("New Keeb: ",newkeeb.currentx,newkeeb.currenty)
             newkeeb_obj.buy()
-        if newide.rect.collidepoint(pos) == 1:
+        if newide.rect.collidepoint(pos) == 1 and not keydown:
             if player.candrag:
                 newide.repos(pg.mouse.get_pos()[0],pg.mouse.get_pos()[1])
                 print("New IDE: ",newide.currentx,newide.currenty)
             newide_obj.buy()
-        if topkek.rect.collidepoint(pos) == 1:
+        if topkek.rect.collidepoint(pos) == 1 and not keydown:
             if player.candrag:
                 topkek.repos(pg.mouse.get_pos()[0],pg.mouse.get_pos()[1])
                 print("Topkek: ",topkek.currentx,topkek.currenty)
             topkek_obj.buy()
-        if reset.rect.collidepoint(pos) == 1:
+        if reset.rect.collidepoint(pos) == 1 and not keydown:
             player.reset()
 
 def drawAll():
@@ -133,9 +135,12 @@ def changeMonitorImage():
 
 def displayPoints(score):
     drawAll()
+    fpsfont = pg.font.SysFont("Comic Sans MS", 25)
+    fps = fpsfont.render(f"FPS: {str(int(clock.get_fps()))}", True, YELLOW)
     myfont = pg.font.SysFont("Impact",30)
     text = myfont.render(f"Name: {player.name}, Lines of Code: {player.score}, Multiplier: {player.mult}",True,WHITE)
     screen.blit(text,(250,0))
+    screen.blit(fps, (0,0))
     pg.display.update()
 
 def doQuitSequence():
@@ -218,12 +223,15 @@ player.loadData(f"players/{player.name}.pkl")
 running = True
 while running:
     if not player.maxscore:
-        if player.score > 10000:
+        if player.score > 100000:
             player.maxscore = True
             player.setScore("Way too many")
     displayPoints(player.score)
     guido.repos(pg.mouse.get_pos()[0],pg.mouse.get_pos()[1])
     pg.display.update()
+    keydown = False
     for event in pg.event.get():
         if event.type == pg.QUIT: doQuitSequence()
         if event.type == pg.MOUSEBUTTONDOWN: doClick(player.mult)
+        if event.type == pg.KEYDOWN: keydown = True; doClick(player.mult)
+    clock.tick(60)
