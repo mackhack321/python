@@ -1,5 +1,5 @@
 import pygame as pg
-from sys import exit
+from sys import exit, argv
 from nicecolors import *
 import pickle as pkl
 from random import choice, randint
@@ -210,7 +210,8 @@ buysoundChannel = pg.mixer.Channel(3)
 resetChannel = pg.mixer.Channel(4)
 playSound("bgmusic")
 ### Make and get player data ###
-player = Player("debug") # EDIT THIS ARGUMENT TO CHANGE PLAYER PROFILE!!!!!
+try: player = Player(argv[1])
+except: print("FATAL: Name argument not found"); exit()
 if player.name == "debug": player.candrag = False # CHANGE TO TRUE TO LET debug DRAG UPGRADES
 player.loadData(f"players/{player.name}.pkl")
 ### Game loop ###
