@@ -5,6 +5,7 @@ from nicecolors import * # my homemade library for common color constants
 import pickle as pkl # used to save and load playerdata
 from random import choice, randint # choice picks a random monitor image, randint determines whether or not the gambler plays
 from time import sleep # general purpose
+import textbox as tb # developer console
 ### Initialize Pygame, make window ###
 pg.init()
 pg.display.set_caption("Software Developer Simulator 1989")
@@ -20,6 +21,7 @@ class Player():
         self.score = 0
         self.candrag = False
         self.maxscore = False
+        self.hasConsole = False
     def setMult(self, newmult):
         self.mult = newmult
     def setScore(self, newscore):
@@ -130,7 +132,7 @@ def playSound(sound): # this function is used all over the place
         buysoundChannel.play(buysound, 0) # play the cha ching sound
 
 def changeMonitorImage(): # pick random monitor image out of list, set monitor picture to that random selection
-    images = ["data/monitors/monitor01.png","data/monitors/monitor02.png","data/monitors/monitor03.png","data/monitors/monitor04.png","data/monitors/monitor05.png","data/monitors/monitor06.png","data/monitors/monitor07.png","data/monitors/monitor08.png"]
+    images = ["data/monitors/monitor01.png","data/monitors/monitor02.png","data/monitors/monitor03.png","data/monitors/monitor04.png","data/monitors/monitor05.png","data/monitors/monitor06.png","data/monitors/monitor07.png","data/monitors/monitor08.png","data/monitors/monitor09"]
     monitor.reImage(choice(images))
 
 def displayPoints(score): # displays more than points now, too lazy to change func name
@@ -142,6 +144,11 @@ def displayPoints(score): # displays more than points now, too lazy to change fu
     screen.blit(text,(250,0)) # put player data on screen surface
     screen.blit(fps, (0,0)) # put fps counter on screen surface
     pg.display.update() # let user see the above text
+
+def console():
+    if player.hasConsole:
+        command = tb.ask(screen, "> ")
+        exec(command)
 
 def doQuitSequence(): # gets run when you try to close the game
     musicChannel.fadeout(500) # fancy background music fadeout
@@ -218,6 +225,7 @@ playSound("bgmusic") # start background music
 try: player = Player(argv[1]) # check for name arg, make new player object
 except: print("FATAL: Name argument not found"); exit() # happens when you don't give a name in the CLI args
 if player.name == "debug": player.candrag = False # please... just ask mack...
+if player.name == "Mack": player.hasConsole = True # let mack use the dev con
 player.loadData(f"players/{player.name}.meme") # load playerdata from PlayerName.meme
 ### Game loop ###
 running = True # yes, the game is running
@@ -233,7 +241,8 @@ while running: # while the game is running
     for event in pg.event.get(): # for everything you can possibly do
         if event.type == pg.QUIT: doQuitSequence() # if you're trying to quit, run the quit sequence
         if event.type == pg.MOUSEBUTTONDOWN: doClick(player.mult) # if you're clicking, do the click func
-        if event.type == pg.KEYDOWN: keydown = True; doClick(player.mult) # if you're typing, do the click func but keydown is True
+        if event.type == pg.KEYDOWN and event.key != pg.K_RETURN and event.key != pg.K_BACKQUOTE: keydown = True; doClick(player.mult) # if you're typing, do the click func but keydown is True
+        if event.type == pg.KEYDOWN and event.key == pg.K_BACKQUOTE: console() # open console if you push ~
     clock.tick(30) # set fps (i think pygame caps at 30)
 # add it all together and you get a game-of-the-year worthy product
 # dlc coming soon

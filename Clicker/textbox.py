@@ -49,23 +49,29 @@ def ask(screen, question):
   "ask(screen, question) -> answer"
   pygame.font.init()
   current_string = []
-  display_box(screen, question + ": " + "".join(current_string))
+  display_box(screen, question + "".join(current_string))
   while 1:
     inkey = get_key()
+    allkeys = pygame.key.get_pressed()
     if inkey == K_BACKSPACE:
       current_string = current_string[0:-1]
     elif inkey == K_RETURN:
       break
     elif inkey == K_MINUS:
       current_string.append("_")
+    elif inkey == K_9 and allkeys[K_LSHIFT]:
+      current_string.append("(")
+    elif inkey == K_0 and allkeys[K_LSHIFT]:
+      current_string.append(")")
+    elif inkey <= 127 and allkeys[K_LSHIFT]:
+      current_string.append(chr(inkey).upper())
     elif inkey <= 127:
       current_string.append(chr(inkey))
-    display_box(screen, question + ": " + "".join(current_string))
+    display_box(screen, question + "".join(current_string))
   return "".join(current_string)
 
 def main():
   screen = pygame.display.set_mode((320,240))
-  exec(ask(screen,"Command"))
-  #print(ask(screen, "Command") + " was entered")
+  print(ask(screen, "Command") + " was entered")
 
 if __name__ == '__main__': main()
