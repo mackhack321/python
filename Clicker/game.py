@@ -132,7 +132,11 @@ def playSound(sound): # this function is used all over the place
         buysoundChannel.play(buysound, 0) # play the cha ching sound
 
 def changeMonitorImage(): # pick random monitor image out of list, set monitor picture to that random selection
-    images = ["data/monitors/monitor01.png","data/monitors/monitor02.png","data/monitors/monitor03.png","data/monitors/monitor04.png","data/monitors/monitor05.png","data/monitors/monitor06.png","data/monitors/monitor07.png","data/monitors/monitor08.png","data/monitors/monitor09"]
+    images = [
+    "data/monitors/monitor01.png","data/monitors/monitor02.png","data/monitors/monitor03.png",
+    "data/monitors/monitor04.png","data/monitors/monitor05.png","data/monitors/monitor06.png",
+    "data/monitors/monitor07.png","data/monitors/monitor08.png","data/monitors/monitor09.png"
+    ]
     monitor.reImage(choice(images))
 
 def displayPoints(score): # displays more than points now, too lazy to change func name
@@ -237,7 +241,7 @@ while running: # while the game is running
     displayPoints(player.score) # show playerdata and other stuff
     guido.repos(pg.mouse.get_pos()[0],pg.mouse.get_pos()[1]) # move guido head to cursor
     pg.display.update() # show guido head movement
-    keydown = False # yeah, a key isn't being pressed
+    keydown = False
     for event in pg.event.get(): # for everything you can possibly do
         if event.type == pg.QUIT: doQuitSequence() # if you're trying to quit, run the quit sequence
         if event.type == pg.MOUSEBUTTONDOWN: doClick(player.mult) # if you're clicking, do the click func
