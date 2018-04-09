@@ -88,6 +88,7 @@ def doClick(mult):
         pos = pg.mouse.get_pos() # get mouse pos
         if keyboard.rect.collidepoint(pos) == 1 or keydown: # if click on keyboard or any key is pressed
             playSound("keypress") # play keypress sound
+            clickClack()
             player.addPoints(mult) # add (1xMultiplier) to score
             changeMonitorImage() # change monitor image
         if newkeeb.rect.collidepoint(pos) == 1 and not keydown: # if click on new keyboard and no key is pressed
@@ -118,6 +119,8 @@ def drawAll(): # draw every sprite back onto the screen
     upgradebanner.draw()
     instructions.draw()
     reset.draw()
+    click.draw()
+    clack.draw()
     guido.draw() # this must be last to go over everything else
 
 def playSound(sound): # this function is used all over the place
@@ -150,9 +153,24 @@ def displayPoints(score): # displays more than points now, too lazy to change fu
     pg.display.update() # let user see the above text
 
 def console():
-    if player.hasConsole:
-        command = tb.ask(screen, "> ")
-        exec(command)
+    if player.hasConsole: # if the player has permission
+        command = tb.ask(screen, "> ") # get command
+        exec(command) # arbitrary code execution exploit 101
+
+def clickClack():
+    if randint(1,2) == 1:
+        clickx = randint(100,900)
+        clicky = randint(100,900)
+        click.repos(clickx,clicky)
+    else:
+        clackx = randint(100,900)
+        clacky = randint(100,900)
+        clack.repos(clackx,clacky)
+
+def intro():
+    while True:
+        if pg.MOUSEBUTTONDOWN: break
+        else: intropage.draw()
 
 def doQuitSequence(): # gets run when you try to close the game
     musicChannel.fadeout(500) # fancy background music fadeout
@@ -209,6 +227,18 @@ reset.resize(100,100)
 reset.repos(75,300)
 reset.draw()
 
+click = Sprite("data/sprites/click.png")
+click.resize(83,52)
+click.repos(-100,-100)
+click.draw()
+
+clack = Sprite("data/sprites/clack.png")
+clack.resize(83,52)
+clack.repos(-100,-100)
+clack.draw()
+
+intropage = Sprite("data/sprites/intropage.png")
+
 guido = Sprite("data/sprites/rossum.png")
 guido.resize(70,105)
 guido.draw()
@@ -233,6 +263,7 @@ if player.name == "Mack": player.hasConsole = True # let mack use the dev con
 player.loadData(f"players/{player.name}.meme") # load playerdata from PlayerName.meme
 ### Game loop ###
 running = True # yes, the game is running
+intro()
 while running: # while the game is running
     if not player.maxscore: # if the player hasn't hit the max score
         if player.score > 100000: # if the player's score is over the max
