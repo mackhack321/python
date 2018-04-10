@@ -167,10 +167,14 @@ def clickClack():
         clacky = randint(100,900)
         clack.repos(clackx,clacky)
 
-def intro():
-    while True:
-        if pg.MOUSEBUTTONDOWN: break
-        else: intropage.draw()
+def intro(): # show intro page
+    intro = True
+    while intro:
+        for event in pg.event.get():
+            if event.type == pg.MOUSEBUTTONDOWN: intro = False; break
+            if event.type == pg.QUIT: doQuitSequence()
+        intropage.draw()
+        pg.display.update()
 
 def doQuitSequence(): # gets run when you try to close the game
     musicChannel.fadeout(500) # fancy background music fadeout
