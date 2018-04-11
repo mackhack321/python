@@ -22,6 +22,7 @@ class Player():
         self.candrag = False
         self.maxscore = False
         self.hasConsole = False
+        self.sawIntro = False
     def setMult(self, newmult):
         self.mult = newmult
     def setScore(self, newscore):
@@ -36,9 +37,10 @@ class Player():
             self.setScore(data["score"])
             self.setMult(data["mult"])
             self.maxscore = data["hasmax"]
+            self.sawIntro = data["sawintro"]
         except: pass
     def saveData(self,filename): # builds a dict with player data, dumps to YourName.meme
-        pkl.dump({"score":self.score, "mult":self.mult, "hasmax":self.maxscore}, open(filename,"wb"))
+        pkl.dump({"score":self.score, "mult":self.mult, "hasmax":self.maxscore, "sawintro":self.sawIntro}, open(filename,"wb"))
     def reset(self): # start player back at 0
         resetChannel.play(resetsound,0)
         self.maxscore = False
@@ -108,6 +110,8 @@ def doClick(mult):
             topkek_obj.buy() # buy topkek upgrade
         if reset.rect.collidepoint(pos) == 1 and not keydown: # if click on reset and no key is pressed
             player.reset() # reset player data
+        if help.rect.collidepoint(pos) == 1 and not keydown: # if click on help and no key is pressed
+            intro() # show the intro page again
 
 def drawAll(): # draw every sprite back onto the screen
     background.draw()
@@ -119,6 +123,7 @@ def drawAll(): # draw every sprite back onto the screen
     upgradebanner.draw()
     instructions.draw()
     reset.draw()
+    help.draw()
     click.draw()
     clack.draw()
     guido.draw() # this must be last to go over everything else
@@ -169,6 +174,7 @@ def clickClack():
 
 def intro(): # show intro page
     intro = True
+    player.sawIntro = True
     while intro:
         for event in pg.event.get():
             if event.type == pg.MOUSEBUTTONDOWN: intro = False; break
@@ -231,6 +237,11 @@ reset.resize(100,100)
 reset.repos(75,300)
 reset.draw()
 
+help = Sprite("data/sprites/helpbutton.png")
+help.resize(100,100)
+help.repos(75,400)
+help.draw()
+
 click = Sprite("data/sprites/click.png")
 click.resize(83,52)
 click.repos(-100,-100)
@@ -267,7 +278,7 @@ if player.name == "Mack": player.hasConsole = True # let mack use the dev con
 player.loadData(f"players/{player.name}.meme") # load playerdata from PlayerName.meme
 ### Game loop ###
 running = True # yes, the game is running
-intro()
+if not player.sawIntro: intro()
 while running: # while the game is running
     if not player.maxscore: # if the player hasn't hit the max score
         if player.score > 100000: # if the player's score is over the max
