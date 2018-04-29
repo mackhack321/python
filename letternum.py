@@ -36,5 +36,3 @@ while not done:
     word = getword()
     print(word)
     done = isWord(word)
-
-print("".join(word), sum(vals))
