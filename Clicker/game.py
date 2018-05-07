@@ -79,11 +79,6 @@ class Upgrade:
                 player.setMult(player.mult+self.multupgrade) # add to multiplier
                 player.subPoints(self.cost) # take away cost
                 playSound("buysound") # cha ching!
-                myfont = pg.font.SysFont("Comic Sans MS",30) # make font var
-                text = myfont.render(f"Bought {self.name}!",True,WHITE) # make purchase confirmation text
-                screen.blit(text,(350,500)) # put text on screen surface
-                pg.display.update() # show it to the user
-                sleep(1) # pause, then get rid of the purchase text
 
 def doClick(mult):
     if pg.mouse.get_pressed()[0] or keydown: # if mouse is clicked or any key is pressed
