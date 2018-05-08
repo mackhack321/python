@@ -130,7 +130,6 @@ def playSound(sound): # this function is used all over the place
         shutdownChannel.play(winshutdown, 0) # play the shutdown sound
     elif sound == "bgmusic": # if you wanna play the background music
         musicChannel.play(bgmusic, -1) # play the background music ON REPEAT (-1)
-        musicChannel.set_volume(.25) # turn down the volume or else it's too heckin loud
     elif sound == "buysound": # if you wanna play the cha ching sound
         buysoundChannel.play(buysound, 0) # play the cha ching sound
 
